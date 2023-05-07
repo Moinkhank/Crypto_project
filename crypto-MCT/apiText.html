@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Fetch Coin Data</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style>
+	#currency_top{
+		display: flex;
+	}
+	.container{
+		/* border: solid; */
+		width: 500px;
+		margin-right: -2%;
+		height: 54px;
+		margin-top: 25px;
+		font-size: 17px;
+		border: none;
+		text-align: center;
+		color: rgba(54, 12, 12, 0.684);
+		
+	}
+	body{background-color: rgb(244, 244, 244);}
+	button{
+		padding: 10px; 
+		border-radius: 10px;
+		color: white;
+		margin-left: 35%;background-color: blueviolet;font-size: larger;"
+	}
+  </style>
+</head>
+<body>
+	<div id="currency_top">
+	<div style="width: 300px;">
+	<h4 style="margin-left: 25px;margin-top: 25px;">top 100 currencies</h4>
+	<h5 style="color: rgba(59, 62, 64, 0.295);">By market capitalization</h5>
+    </div>
+	<div class="container"
+	  style="border: solid;width: 500px;"
+	>
+		<div class="row">
+		  <div class="col">
+			All currencies
+		  </div>
+		  <div class="col">
+			Coins
+		  </div>
+		  <div class="col">
+			Tokens
+		  </div>
+		  <div class="col">
+			Favourites
+		  </div>
+		</div>
+	  </div>
+	</div>
+        <!-- table section -->
+		<table class="table table-bordered" style="margin-top:90px;">
+		<thead>
+			<tr>
+			<th scope="col">Coin</th>
+			<th scope="col">Market Cap</th>
+			<th scope="col">Price</th>
+			<th scope="col">Volume 24H</th>
+			<th scope="col">Circulating</th>
+			<th scope="col">change(24h)</th>
+			<th scope="col">symbol</th>
+			</tr>
+		</thead>
+		<tbody id="data">
+
+		</tbody>
+		</table>
+	<button onclick="fetchCoinData()" >Click here </button>
+	<script>
+		async function fetchCoinData() {
+			const url = 'https://coinranking1.p.rapidapi.com/coins?referenceCurrencyUuid=yhjMzLPhuIDl&timePeriod=24h&tiers%5B0%5D=1&orderBy=marketCap&orderDirection=desc&limit=50&offset=0';
+			const options = {
+				method: 'GET',
+				headers: {
+					'X-RapidAPI-Key': '3ade2d2c17msh9c7064e4da99771p17f558jsn24ef571a15ab',
+					'X-RapidAPI-Host': 'coinranking1.p.rapidapi.com'
+				}
+			};
+
+			try {
+				const response =  await fetch(url, options);
+				const codata = await response.json();
+				console.log(codata);
+				let coinsdata = codata.data.coins;
+				if(coinsdata.length >0){
+					var cryptocoins =""
+				}
+
+				coinsdata.forEach(coin => {
+					cryptocoins += "<tr>"
+						cryptocoins += `<td> <img src="${coin.iconUrl}" style= height:40px;width:40px;> ${coin.name} </td>`;
+						cryptocoins += `<td> ${coin.marketCap} </td>`;
+						cryptocoins += `<td>$${coin.price} </td>`;
+						cryptocoins += `<td> ${coin.listedAt} </td>`;
+						cryptocoins += `<td> ${coin.btcPrice} </td>`;
+						cryptocoins += `<td> ${coin.change} </td>`;
+						cryptocoins += `<td> ${coin.symbol} </td><tr>`;
+					
+				});
+				document.getElementById("data").innerHTML= cryptocoins;
+			} catch (error) {
+				console.error(error);
+			}
+		}
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
